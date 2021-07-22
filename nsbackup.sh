@@ -41,8 +41,9 @@ echo -e ""
 
 # Set bucket variable to s3bucket variable value if bucket is blank. s3bucket was previous option but the addition of
 # other storage options required detatching the bucket definition from the S3 product.
+# The bucket variable is ignored if storage type is scp
 
-if [[ "$bucket" = "" ]]
+if [[ "$bucket" = "" && "$storage" != "scp" ]]
 then
     if [[ "$s3bucket" = "" ]]
         then
@@ -132,6 +133,26 @@ then
     }
 fi
 
+# Set scp variables for processing
+if [ "$storage" = "scp" ]
+then
+    storageName="scp"
+    echo -e "\e[92mStorage option set to \e[92m${storageName}\e[39m"
+    $logmsg "Info: Storage Option set to ${storageName}"
+
+    backup() {
+	scp ${backup_path}/$1 ${ssh_user}@${ssh_host}:${ssh_dstdir}${hostname}/
+	if [[ "$?" = "0" ]]
+	then
+	    echo -e "\e[92mInfo: File uploaded successfully to ${storageName}\e[39m"
+            $logmsg "Info: File uploaded successfully to ${storageName}"
+	else
+            echo -e "\e[91mError: Problem uploading file to ${storageName}\e[39m"
+            $logmsg "Error: Problem uploading file to ${storageName}"
+	fi
+	rm ${backup_path}/$1
+    }
+fi
 
 # Error out if no CLI options provided and display CLI options
 if [ $# -lt 1 ]

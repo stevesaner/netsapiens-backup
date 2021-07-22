@@ -20,8 +20,14 @@
 
 # storage="s3" # Amazon S3 bucket
 # storage="gs" # Google Cloud Storage bucket
- bucket="" # new option for cross compatibility.
+# storage="scp" # scp to Generic ssh server
+ bucket="" # new option for cross compatibility. Not needed for scp option
 
 # S3 options
  s3cfg="" #location of .s3cfg file
  s3bucket="" #S3 Bucket Name (legacy). This is for backwards compatibility and is not necessary in this version
+
+# scp options
+ ssh_host="" # hostname or IP of storage server
+ ssh_user="" # username of ssh account on storage server
+ ssh_dstdir="" # destination directory on storage server end with a / (eg. "netsapiens/")
